@@ -1,24 +1,28 @@
 <template>
     <div v-if="!this.$apollo.queries.user.loading">
+        {{user.firstname}}
         Edit your name:
         <input v-model="user.firstname"/>
     </div>
 </template>
 
 <script>
-    import gql from "graphql-tag";
+    import userQuery from "./user";
 
     export default {
+
+        data() {
+            return {
+                user: {}
+            }
+        },
         apollo: {
             user: {
-                query: gql`{
-                    user (id: 1) {
-                        id
-                        age
-                        firstname
-                    }
-                }`,
-                update: data => data.user
+                query: userQuery,
+                manual: true,
+                result ({data}) {
+                     this.user = {...data.user};
+                },
             }
         }
     }
